@@ -8,18 +8,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /* Things to add:
-    Make a more complex point system based on the difficulty they choose
     More operators
     More available numbers
     Better looking Panels
+    Settings that change even when they are disabled by the impossible button
     ...
  */
 
 @SuppressWarnings("rawtypes")
 public class Frame extends JFrame {
     //Scores
-    int highScore = 0;
-    int score = 0;
+    double highScore = 0;
+    double score = 0;
+    double multiplier = 1;
 
     //Public font to use withing the frame
     Font font = new Font("Arial", Font.PLAIN, 75);
@@ -331,38 +332,51 @@ public class Frame extends JFrame {
     }
 
     private void SS(Object[] set) {
-        //Saves the amount of buttons selected
-        JComboBox x = (JComboBox) set[0];
-        for (int i = 0; i < options.length; i++) {
-            JButton y = options[i];
-
-            //Turns on all the buttons that are selected in the settings
-            if (i < Integer.parseInt((String) Objects.requireNonNull(x.getSelectedItem()))) {
-                y.setVisible(true);
-            } else {
-                y.setVisible(false);
-            }
-        }
-        unSet[0] = x.getSelectedIndex();
-
-        //Activates or deactivates the timer
-        JCheckBox f = (JCheckBox) set[2];
-        if (f.isSelected()) {
-            active = true;
-        } else {
-            active = false;
-        }
-        unSet[2] = f.isSelected();
-
-        //Sets the timer length according to the users selection
-        x = (JComboBox) set[1];
-        tChoice = Integer.parseInt((String) Objects.requireNonNull(x.getSelectedItem()));
-        unSet[1] = x.getSelectedIndex();
-
         //Impossible button
-        //CHECK IF IT'S SELECTED SO OTHER SETTINGS AREN'T ALTERED
-        f = (JCheckBox) set[3];
-        unSet[3] = f.isSelected();
+        JCheckBox imp = (JCheckBox) set[3];
+        unSet[3] = imp.isSelected();
+
+        JComboBox x = (JComboBox) set[0];
+        JComboBox z = (JComboBox) set[1];
+        JCheckBox f = (JCheckBox) set[2];
+        if (!imp.isSelected()) {
+            //Saves the amount of buttons selected
+            for (int i = 0; i < options.length; i++) {
+                JButton y = options[i];
+
+                //Turns on all the buttons that are selected in the settings
+                if (i < Integer.parseInt((String) Objects.requireNonNull(x.getSelectedItem()))) {
+                    y.setVisible(true);
+                } else {
+                    y.setVisible(false);
+                }
+            }
+
+            //Activates or deactivates the timer
+            if (f.isSelected()) {
+                active = true;
+            } else {
+                active = false;
+            }
+
+            //Sets the timer length according to the users selection
+            tChoice = Integer.parseInt((String) Objects.requireNonNull(z.getSelectedItem()));
+        } else {
+            //Sets 5 buttons active for the impossible difficulty
+            for (int i = 0; i < 5; i++) {
+                JButton y = options[i];
+                y.setVisible(true);
+            }
+
+            //Activates the timer with 5 seconds
+            active = true;
+            tChoice = 5;
+        }
+
+        //Updates unSet (I honestly forgot what this does...)
+        unSet[0] = x.getSelectedIndex();
+        unSet[1] = z.getSelectedIndex();
+        unSet[2] = f.isSelected();
 
         //Sends you to the main menu
         begin(3);
@@ -435,6 +449,13 @@ public class Frame extends JFrame {
                     }
                 }
             }
+        } else {
+            choice1.setBounds((frameWidth - 200) / 7, frameHeight - 289, 200, 75);
+            choice2.setBounds((frameWidth - 200) / 2, frameHeight - 289, 200, 75);
+            choice3.setBounds(((frameWidth - 200) / 7) * 6, frameHeight - 289, 200, 75);
+            choice4.setBounds((frameWidth - 200) / 7, frameHeight - 189, 200, 75);
+            choice5.setBounds((frameWidth - 200) / 2, frameHeight - 189, 200, 75);
+            choice6.setBounds(((frameWidth - 200) / 7) * 6, frameHeight - 189, 200, 75);
         }
 
         //Calculates to find the correct answer
@@ -511,7 +532,34 @@ public class Frame extends JFrame {
             score++;
             update(operators, equation, options);
         } else {
-            timer.cancel();
+            try {
+                timer.cancel();
+            } catch (NullPointerException e) {
+                //e.printStackTrace();
+            }
+
+            if (active) {
+                switch (tChoice) {
+                    case 3 -> multiplier += 0.2;
+                    case 4 -> multiplier += 0.1;
+                }
+            }
+
+            int i = 0;
+            for (JButton x : options) {
+                if (x.isVisible()) {
+                    if (i > 3) {
+                        multiplier += 0.1;
+                    }
+                    i++;
+                }
+            }
+
+            JCheckBox a = (JCheckBox) set[3];
+            if (a.isSelected()) {
+                multiplier += 1.2;
+            }
+
             begin(0);
         }
     }
@@ -551,13 +599,16 @@ public class Frame extends JFrame {
                 game.setVisible(false);
                 endScreen.setVisible(true);
 
+                score = (score * multiplier) * 100;
+
                 if (score > highScore) {
                     highScore = score;
                 }
 
                 //Shows the user their score and highscore
-                JOptionPane.showMessageDialog(endScreen, "Highscore:" + highScore + "\nScore: " + score);
+                JOptionPane.showMessageDialog(endScreen, "Highscore:" + (int) highScore + "\nScore: " + (int) score);
                 score = 0;
+                multiplier = 1;
             }
         }
     }
