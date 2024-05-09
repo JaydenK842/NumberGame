@@ -9,9 +9,9 @@ import java.util.TimerTask;
 
 /* Things to add:
     More operators
-    More available numbers
+    Number range choice
     Better looking Panels
-    Settings that change even when they are disabled by the impossible button
+    Currency/Store?
     ...
  */
 
@@ -345,19 +345,11 @@ public class Frame extends JFrame {
                 JButton y = options[i];
 
                 //Turns on all the buttons that are selected in the settings
-                if (i < Integer.parseInt((String) Objects.requireNonNull(x.getSelectedItem()))) {
-                    y.setVisible(true);
-                } else {
-                    y.setVisible(false);
-                }
+                y.setVisible(i < Integer.parseInt((String) Objects.requireNonNull(x.getSelectedItem())));
             }
 
             //Activates or deactivates the timer
-            if (f.isSelected()) {
-                active = true;
-            } else {
-                active = false;
-            }
+            active = f.isSelected();
 
             //Sets the timer length according to the users selection
             tChoice = Integer.parseInt((String) Objects.requireNonNull(z.getSelectedItem()));
@@ -412,7 +404,7 @@ public class Frame extends JFrame {
         z = (Boolean) unset[3];
         if (a.isSelected() != z) {
             if (interV.isEnabled() && !done) {interV.setEnabled(false); intervalNum.setEnabled(false);} else if (timerActive.isSelected() && !done) {interV.setEnabled(true); intervalNum.setEnabled(true);}
-            if (timerActive.isEnabled()) {timerActive.setEnabled(false);} else {timerActive.setEnabled(true);}
+            timerActive.setEnabled(!timerActive.isEnabled());
             if (buttons.isEnabled()) {buttons.setEnabled(false); buttonAmount.setEnabled(false);} else {buttons.setEnabled(true); buttonAmount.setEnabled(true);}
         }
         a.setSelected(z);
@@ -436,6 +428,8 @@ public class Frame extends JFrame {
         //Changes the text box size depending on the length of the equation
         equation.setBounds((frameWidth - getTextSize(full, 75)) / 2, 50, getTextSize(full, 75), 63);
 
+        //If its in impossible mode, it shifts all the buttons and the equation
+        //Otherwise, it resets the location of all buttons and the equation
         JCheckBox f = (JCheckBox) set[3];
         if (f.isSelected()) {
             equation.setLocation((int)(Math.random() * ((frameWidth - equation.getWidth())+ 1)), (int)(Math.random() * ((frameHeight - equation.getHeight())+ 1)));
@@ -548,7 +542,7 @@ public class Frame extends JFrame {
             int i = 0;
             for (JButton x : options) {
                 if (x.isVisible()) {
-                    if (i > 3) {
+                    if (i >= 3) {
                         multiplier += 0.1;
                     }
                     i++;
