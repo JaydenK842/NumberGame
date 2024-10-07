@@ -258,19 +258,19 @@ public class Frame extends JFrame {
         //Settings title
         sTitle = new JLabel("Settings");
         sTitle.setFont(font);
-        sTitle.setBounds((frameWidth - getTextSize(sTitle.getText(), 75)) / 2, 50, getTextSize(sTitle.getText(), 75), 82);
+        sTitle.setBounds((frameWidth - getTextSize(sTitle.getText(), 75)) / 2, 20, getTextSize(sTitle.getText(), 75), 82);
         settingsScreen.add(sTitle);
 
         //Button count label
         buttons = new JLabel("Button Count");
         buttons.setFont(new Font("Arial", Font.PLAIN, 15));
-        buttons.setBounds(((frameWidth - getTextSize(buttons.getText(), 15)) * 9) / 16, frameHeight - 375, getTextSize(buttons.getText(), 15), 20);
+        buttons.setBounds(((frameWidth - getTextSize(buttons.getText(), 15)) * 9) / 16, frameHeight - 300, getTextSize(buttons.getText(), 15) + 5, 20);
         settingsScreen.add(buttons);
 
         //Combo box that allows the user to choose how many buttons there are
         buttonAmount = new JComboBox(new String[]{"3", "4", "5", "6"});
         buttonAmount.setFont(new Font("Arial", Font.PLAIN, 15));
-        buttonAmount.setBounds((((frameWidth - 45) * 9) / 16) + getTextSize(buttons.getText(), 15), frameHeight - 375, 45, 20);
+        buttonAmount.setBounds((((frameWidth - 45) * 9) / 16) + getTextSize(buttons.getText(), 15), frameHeight - 300, 45, 20);
         settingsScreen.add(buttonAmount);
         set[0] = buttonAmount;
         unSet[0] = buttonAmount.getSelectedIndex();
@@ -278,7 +278,7 @@ public class Frame extends JFrame {
         //The impossible button...
         impossible = new JCheckBox("Impossible");
         impossible.setFont(new Font("Arial", Font.PLAIN, 15));
-        impossible.setBounds(((frameWidth - getTextSize(impossible.getText(), 15) + 25) * 3) / 8, frameHeight - 375, getTextSize(impossible.getText(), 15) + 25, 20);
+        impossible.setBounds(((frameWidth - getTextSize(impossible.getText(), 15) + 25) * 3) / 8, frameHeight - 260, getTextSize(impossible.getText(), 15) + 30, 20);
         impossible.setFocusable(false);
         settingsScreen.add(impossible);
         set[3] = impossible;
@@ -287,13 +287,13 @@ public class Frame extends JFrame {
         //Time limit label
         interV = new JLabel("Time Limit");
         interV.setFont(new Font("Arial", Font.PLAIN, 15));
-        interV.setBounds(((frameWidth - getTextSize(buttons.getText(), 15)) * 9) / 16, frameHeight - 335, getTextSize(buttons.getText(), 15), 20);
+        interV.setBounds(((frameWidth - getTextSize(buttons.getText(), 15)) * 9) / 16, frameHeight - 260, getTextSize(buttons.getText(), 15) + 5, 20);
         settingsScreen.add(interV);
 
         //Combo box that allows the user to choose a time limit
         intervalNum = new JComboBox(new String[]{"3", "4", "5", "6", "7", "8", "9", "10"});
         intervalNum.setFont(new Font("Arial", Font.PLAIN, 15));
-        intervalNum.setBounds((((frameWidth - 45) * 9) / 16) + getTextSize(interV.getText(), 15), frameHeight - 335, 45, 20);
+        intervalNum.setBounds((((frameWidth - 45) * 9) / 16) + getTextSize(interV.getText(), 15), frameHeight - 260, 45, 20);
         intervalNum.setSelectedIndex(2);
         settingsScreen.add(intervalNum);
         set[1] = intervalNum;
@@ -302,7 +302,7 @@ public class Frame extends JFrame {
         //Allows the user to turn the timer on or off
         timerActive = new JCheckBox("Timer Active");
         timerActive.setFont(new Font("Arial", Font.PLAIN, 15));
-        timerActive.setBounds(impossible.getX(), frameHeight - 335, getTextSize(timerActive.getText(), 15) + 25, 20);
+        timerActive.setBounds(impossible.getX(), frameHeight - 300, getTextSize(timerActive.getText(), 15) + 35, 20);
         timerActive.setSelected(true);
         timerActive.setFocusable(false);
         settingsScreen.add(timerActive);
